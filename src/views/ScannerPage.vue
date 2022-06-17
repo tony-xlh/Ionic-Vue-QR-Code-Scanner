@@ -1,17 +1,19 @@
 <template>
-  <ion-page>
-  </ion-page>
+<ion-page><QRCodeScanner></QRCodeScanner></ion-page>
+  
 </template>
 
 <script lang="ts">
-import {  IonPage, useIonRouter } from '@ionic/vue';
+import { IonPage, useIonRouter } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { states } from '../states'
+import QRCodeScanner from '../components/QRCodeScanner.vue'
 
 export default defineComponent({
   name: 'HomePage',
   components: {
     IonPage,
+    QRCodeScanner,
   },
   data() {
     return {
