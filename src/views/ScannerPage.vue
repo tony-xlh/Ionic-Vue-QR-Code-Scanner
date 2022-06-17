@@ -6,7 +6,7 @@
 <script lang="ts">
 import {  IonPage, useIonRouter } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import { store } from '../store'
+import { states } from '../states'
 
 export default defineComponent({
   name: 'HomePage',
@@ -15,7 +15,7 @@ export default defineComponent({
   },
   data() {
     return {
-      sharedState: store.state
+      sharedStates: states
     }
   },
   setup() {
@@ -23,12 +23,12 @@ export default defineComponent({
     return { router };
   },
   mounted(){
-    console.log(this.sharedState);
+    console.log(this.sharedStates);
     setTimeout(this.goBack,2000);
   },
   methods: {
     goBack() {
-      this.sharedState.barcodeResults = ["1","2","3"];
+      this.sharedStates.barcodeResults = ["1","2","3"];
       this.router.back();
     }
   }

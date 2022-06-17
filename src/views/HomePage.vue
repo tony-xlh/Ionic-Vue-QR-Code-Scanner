@@ -11,13 +11,13 @@
       <ion-list>
         <ion-item>
           <ion-label>Continuous Scan</ion-label>
-          <ion-checkbox slot="end" v-model="sharedState.continuousScan"></ion-checkbox>
+          <ion-checkbox slot="end" v-model="sharedStates.continuousScan"></ion-checkbox>
         </ion-item>
         <ion-item>
           <ion-label>Scan QR Codes Only</ion-label>
-          <ion-checkbox slot="end" v-model="sharedState.qrcodeOnly"></ion-checkbox>
+          <ion-checkbox slot="end" v-model="sharedStates.qrcodeOnly"></ion-checkbox>
         </ion-item>
-        <ion-item v-bind:key="'result'+index" v-for="(result,index) in sharedState.barcodeResults">
+        <ion-item v-bind:key="'result'+index" v-for="(result,index) in sharedStates.barcodeResults">
           <ion-label>{{result}}</ion-label>
         </ion-item>
       </ion-list>
@@ -28,7 +28,7 @@
 <script lang="ts">
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, IonList, IonLabel, IonCheckbox, IonItem, useIonRouter } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import { store } from '../store'
+import { states } from '../states'
 
 export default defineComponent({
   name: 'HomePage',
@@ -46,7 +46,7 @@ export default defineComponent({
   },
   data() {
     return {
-      sharedState: store.state
+      sharedStates: states
     }
   },
   setup() {
@@ -55,12 +55,12 @@ export default defineComponent({
   },
   ionViewDidEnter() {
     console.log("home ionViewDidEnter");
-    console.log(this.sharedState);
+    console.log(this.sharedStates);
   },
   methods: {
     gotoScannerPage() {
-      console.log(this.sharedState.qrcodeOnly);
-      console.log(this.sharedState.continuousScan);
+      console.log(this.sharedStates.QRCodeOnly);
+      console.log(this.sharedStates.continuousScan);
       this.router.push('/scanner');
     }
   }
