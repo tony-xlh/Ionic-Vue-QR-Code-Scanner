@@ -5,6 +5,7 @@
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted } from 'vue';
 import { DBR, Options, ScanResult } from "capacitor-plugin-dynamsoft-barcode-reader";
+import { existsTypeAnnotation } from '@babel/types';
 
 
 const props = defineProps(['license','dceLicense']);
@@ -29,21 +30,22 @@ onMounted(async () => {
       console.log("onPlayed");
     });
 
-
-
-    await DBR.startScan();
-    let result = await DBR.getAllCameras();
-    if (result.cameras){
-      console.log(result.cameras);
-      result.cameras.forEach(async cameraID => {
+    let camerasResult = await DBR.getAllCameras();
+    if (camerasResult.cameras){
+      for (let index = 0; index < camerasResult.cameras.length; index++) {
+        const cameraID = camerasResult.cameras[index];
         if (cameraID.indexOf("Founder") != -1 ){
           console.log(cameraID)
           console.log("selct founder camera");
           let selectionResult = await DBR.selectCamera({cameraID:cameraID});
           console.log(selectionResult);
+          break;
         }
-      });
+      }
     }
+
+    await DBR.startScan();
+   
    
   }
 });
