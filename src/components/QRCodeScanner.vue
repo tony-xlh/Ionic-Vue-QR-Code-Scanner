@@ -1,15 +1,14 @@
 <template>
-  <div>Initializing...</div>
+  <div v-if="!initialized">Initializing...</div>
 </template>
 
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { DBR, Options, ScanResult } from "capacitor-plugin-dynamsoft-barcode-reader";
-import { existsTypeAnnotation } from '@babel/types';
-
 
 const props = defineProps(['license','dceLicense']);
 const emit = defineEmits(['onScanned']);
+const initialized = ref(false);
 
 onMounted(async () => {
   console.log(props);
@@ -23,6 +22,7 @@ onMounted(async () => {
   let result = await DBR.initialize(options); // To use your license: DBR.initialize({license: <your license>})
   console.log("QRCodeScanner mounted");
   if (result.success === true) {
+    initialized.value = true;
     let frameReadListener = await DBR.addListener('onFrameRead', async (scanResult:ScanResult) => {
       emit("onScanned",scanResult);
     });
@@ -34,7 +34,7 @@ onMounted(async () => {
     if (camerasResult.cameras){
       for (let index = 0; index < camerasResult.cameras.length; index++) {
         const cameraID = camerasResult.cameras[index];
-        if (cameraID.indexOf("Founder") != -1 ){
+        if (cameraID.toLowerCase().indexOf("front") != -1 ){
           console.log(cameraID)
           console.log("selct founder camera"); //the USB camera's name of the developer
           let selectionResult = await DBR.selectCamera({cameraID:cameraID});
