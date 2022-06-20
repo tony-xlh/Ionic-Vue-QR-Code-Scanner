@@ -36,7 +36,7 @@ onMounted(async () => {
         const cameraID = camerasResult.cameras[index];
         if (cameraID.indexOf("Founder") != -1 ){
           console.log(cameraID)
-          console.log("selct founder camera");
+          console.log("selct founder camera"); //the USB camera's name of the developer
           let selectionResult = await DBR.selectCamera({cameraID:cameraID});
           console.log(selectionResult);
           break;
