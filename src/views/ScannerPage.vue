@@ -2,6 +2,8 @@
 <ion-page>
   <QRCodeScanner 
     license="DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ=="
+    :torchOn="torchOn"
+    :runtimeSettings="runtimeSettings"
     @onScanned="onScanned"
   ></QRCodeScanner>
 </ion-page>
@@ -22,7 +24,15 @@ export default defineComponent({
     QRCodeScanner,
   },
   setup() {
+    const torchOn = ref(false);
     const sharedStates = states;
+    const runtimeSettings = ref('');
+    if (sharedStates.QRCodeOnly) {
+      runtimeSettings.value = "{\"ImageParameter\":{\"BarcodeFormatIds\":[\"BF_QR_CODE\"],\"Description\":\"\",\"Name\":\"Settings\"},\"Version\":\"3.0\"}";
+    }else{
+      runtimeSettings.value = "{\"ImageParameter\":{\"BarcodeFormatIds\":[\"BF_ALL\"],\"Description\":\"\",\"Name\":\"Settings\"},\"Version\":\"3.0\"}";
+    }
+    
     const router = useIonRouter();
     let scanned = false;
 
@@ -41,7 +51,7 @@ export default defineComponent({
       console.log(sharedStates);
       //setTimeout(goBack,2000);
     });
-    return {onScanned};
+    return {torchOn,runtimeSettings,onScanned};
   },
 });
 </script>
