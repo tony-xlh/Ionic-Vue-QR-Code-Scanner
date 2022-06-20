@@ -29,7 +29,7 @@ export default defineComponent({
     const onScanned = (result:ScanResult) => {
       console.log("onScanned");
       console.log(result);
-      if (result.results.length>0 && scanned === false) {
+      if (result.results.length>0 && scanned === false && sharedStates.continuousScan === false) {
         scanned = true;
         sharedStates.barcodeResults = result.results;
         router.back();
