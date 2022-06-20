@@ -3,13 +3,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onBeforeUnmount, onMounted } from 'vue';
 
 export default defineComponent({
   name: 'QRCodeScanner',
-
-  mounted(){
-    console.log("QRCodeScanner mounted");
+  setup(){
+    onMounted(() => {
+      console.log("QRCodeScanner mounted");
+    });
+    onBeforeUnmount(() => {
+     console.log("QRCodeScanner unmount");
+    });
   },
 });
 

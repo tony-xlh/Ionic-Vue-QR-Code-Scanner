@@ -5,7 +5,7 @@
 
 <script lang="ts">
 import { IonPage, useIonRouter } from '@ionic/vue';
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 import { states } from '../states'
 import QRCodeScanner from '../components/QRCodeScanner.vue'
 
@@ -15,25 +15,20 @@ export default defineComponent({
     IonPage,
     QRCodeScanner,
   },
-  data() {
-    return {
-      sharedStates: states
-    }
-  },
   setup() {
+    const sharedStates = states;
     const router = useIonRouter();
-    return { router };
-  },
-  mounted(){
-    console.log(this.sharedStates);
-    setTimeout(this.goBack,2000);
-  },
-  methods: {
-    goBack() {
-      this.sharedStates.barcodeResults = ["1","2","3"];
-      this.router.back();
+    const goBack = () => {
+      sharedStates.barcodeResults = ["1","2","3"];
+      router.back();
     }
-  }
+    onMounted(() => {
+      console.log(sharedStates.QRCodeOnly);
+      console.log(sharedStates.continuousScan);
+      console.log(sharedStates);
+      setTimeout(goBack,2000);
+    });
+  },
 });
 </script>
 

@@ -15,7 +15,7 @@
         </ion-item>
         <ion-item>
           <ion-label>Scan QR Codes Only</ion-label>
-          <ion-checkbox slot="end" v-model="sharedStates.qrcodeOnly"></ion-checkbox>
+          <ion-checkbox slot="end" v-model="sharedStates.QRCodeOnly"></ion-checkbox>
         </ion-item>
         <ion-item v-bind:key="'result'+index" v-for="(result,index) in sharedStates.barcodeResults">
           <ion-label>{{result}}</ion-label>
@@ -44,26 +44,20 @@ export default defineComponent({
     IonLabel,
     IonItem
   },
-  data() {
-    return {
-      sharedStates: states
-    }
-  },
+
   setup() {
     const router = useIonRouter();
-    return { router };
-  },
-  ionViewDidEnter() {
-    console.log("home ionViewDidEnter");
-    console.log(this.sharedStates);
-  },
-  methods: {
-    gotoScannerPage() {
-      console.log(this.sharedStates.QRCodeOnly);
-      console.log(this.sharedStates.continuousScan);
-      this.router.push('/scanner');
+    const sharedStates = states;
+
+    const gotoScannerPage = () => {
+      router.push('/scanner');
     }
-  }
+
+    return { 
+      sharedStates,
+      gotoScannerPage
+    };
+  },
 });
 
 </script>
