@@ -2,20 +2,56 @@
   <div>Initializing...</div>
 </template>
 
-<script lang="ts">
-import { defineComponent, onBeforeUnmount, onMounted } from 'vue';
+<script lang="ts" setup>
+import { onBeforeUnmount, onMounted } from 'vue';
+import { DBR, Options, ScanResult } from "capacitor-plugin-dynamsoft-barcode-reader";
 
-export default defineComponent({
-  name: 'QRCodeScanner',
-  setup(){
-    onMounted(() => {
-      console.log("QRCodeScanner mounted");
+
+const props = defineProps(['license','dceLicense']);
+const emit = defineEmits(['onScanned']);
+
+onMounted(async () => {
+  console.log(props);
+  let options:Options = {};
+  if (props.license) {
+    options.license = props.license;
+  }
+  if (props.dceLicense) {
+    options.dceLicense = props.dceLicense;
+  }
+  let result = await DBR.initialize(options); // To use your license: DBR.initialize({license: <your license>})
+  console.log("QRCodeScanner mounted");
+  if (result.success === true) {
+    let frameReadListener = await DBR.addListener('onFrameRead', async (scanResult:ScanResult) => {
+      emit("onScanned",scanResult);
     });
-    onBeforeUnmount(() => {
-     console.log("QRCodeScanner unmount");
+    let onPlayedListener = await DBR.addListener("onPlayed", (result:{resolution:string}) => {
+      console.log("onPlayed");
     });
-  },
+
+
+
+    await DBR.startScan();
+    let result = await DBR.getAllCameras();
+    if (result.cameras){
+      console.log(result.cameras);
+      result.cameras.forEach(async cameraID => {
+        if (cameraID.indexOf("Founder") != -1 ){
+          console.log(cameraID)
+          console.log("selct founder camera");
+          let selectionResult = await DBR.selectCamera({cameraID:cameraID});
+          console.log(selectionResult);
+        }
+      });
+    }
+   
+  }
 });
+onBeforeUnmount(() => {
+  DBR.stopScan();
+  console.log("QRCodeScanner unmount");
+});
+
 
 </script>
 

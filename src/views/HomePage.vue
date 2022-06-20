@@ -18,7 +18,7 @@
           <ion-checkbox slot="end" v-model="sharedStates.QRCodeOnly"></ion-checkbox>
         </ion-item>
         <ion-item v-bind:key="'result'+index" v-for="(result,index) in sharedStates.barcodeResults">
-          <ion-label>{{result}}</ion-label>
+          <ion-label>{{result.barcodeFormat+": "+result.barcodeText}}</ion-label>
         </ion-item>
       </ion-list>
     </ion-content>
@@ -58,6 +58,8 @@ export default defineComponent({
       gotoScannerPage
     };
   },
+
+
 });
 
 </script>
