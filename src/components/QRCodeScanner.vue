@@ -7,7 +7,7 @@ import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { DBR, Options, ScanResult } from "capacitor-plugin-dynamsoft-barcode-reader";
 
 const props = defineProps(['license','dceLicense','torchOn','runtimeSettings']);
-const emit = defineEmits(['onScanned']);
+const emit = defineEmits(['onScanned','onPlayed']);
 const initialized = ref(false);
 const torchOn = ref(props.torchOn);
 
@@ -24,11 +24,11 @@ onMounted(async () => {
   console.log("QRCodeScanner mounted");
   if (result.success === true) {
     initialized.value = true;
-    let frameReadListener = await DBR.addListener('onFrameRead', async (scanResult:ScanResult) => {
+    let frameReadListener = await DBR.addListener('onFrameRead', (scanResult:ScanResult) => {
       emit("onScanned",scanResult);
     });
     let onPlayedListener = await DBR.addListener("onPlayed", (result:{resolution:string}) => {
-      console.log("onPlayed");
+      emit("onPlayed",result.resolution);
     });
 
     if (props.runtimeSettings) {
