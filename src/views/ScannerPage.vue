@@ -1,8 +1,6 @@
 <template>
 
 <ion-page>
-
-
     <QRCodeScanner 
       license="DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ=="
       :torchOn="torchOn"
@@ -26,6 +24,7 @@
     <svg
       :viewBox="viewBox"
       class="overlay"
+      v-if="sharedStates.continuousScan"
     >
       <polygon v-bind:key="'polygon'+index" v-for="(barcodeResult,index) in barcodeResults"
         :points="getPointsData(barcodeResult)"
@@ -137,6 +136,7 @@ export default defineComponent({
       torchOn,
       toggleFlash,
       close,
+      sharedStates,
       runtimeSettings,
       viewBox,
       barcodeResults,
