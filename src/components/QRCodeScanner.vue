@@ -5,11 +5,55 @@
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { DBR, Options, ScanResult } from "capacitor-plugin-dynamsoft-barcode-reader";
+import { scan } from 'ionicons/icons';
 
 const props = defineProps(['license','dceLicense','torchOn','runtimeSettings']);
 const emit = defineEmits(['onScanned','onPlayed']);
 const initialized = ref(false);
-const torchOn = ref(props.torchOn);
+let currentHeight = 0;
+let currentWidth = 0;
+
+const handleRotation = (result:any, orientation: string, rotation:number) => {
+   let width,height;
+   if (orientation == "portrait") {
+     width = currentHeight;
+     height = currentWidth;
+   }else{
+     width = currentWidth;
+     height = currentHeight;
+   }
+   for (let i = 1; i < 5; i++) {
+     let x = result["x"+i];
+     let y = result["y"+i];
+     let rotatedX;
+     let rotatedY;
+            
+     switch (rotation) {
+       case 0:
+         rotatedX = x;
+         rotatedY = y;
+         break;
+       case 90:
+         rotatedX = width - y;
+         rotatedY = x;
+         break;
+       case 180:
+         rotatedX = width - x;
+         rotatedY = height - y;
+         break;
+       case 270:
+         rotatedX = height - y;
+         rotatedY = width - x;
+         break;
+       default:
+         rotatedX = x;
+         rotatedY = y;
+     }
+     result["x"+i] = rotatedX;
+     result["y"+i] = rotatedY;
+   }
+ }
+
 
 onMounted(async () => {
   console.log(props);
@@ -25,9 +69,17 @@ onMounted(async () => {
   if (result.success === true) {
     initialized.value = true;
     let frameReadListener = await DBR.addListener('onFrameRead', (scanResult:ScanResult) => {
+      for (let index = 0; index < scanResult.results.length; index++) {
+        const result = scanResult.results[index];
+        if (scanResult.deviceOrientation && scanResult.frameOrientation) {
+          handleRotation(result,scanResult.deviceOrientation,scanResult.frameOrientation);
+        }
+      }
       emit("onScanned",scanResult);
     });
     let onPlayedListener = await DBR.addListener("onPlayed", (result:{resolution:string}) => {
+      currentWidth = parseInt(result.resolution.split("x")[0]);
+      currentHeight = parseInt(result.resolution.split("x")[1]);
       emit("onPlayed",result.resolution);
     });
 
@@ -53,7 +105,6 @@ onMounted(async () => {
 
     await DBR.startScan();
    
-   
   }
 });
 
@@ -61,6 +112,7 @@ onBeforeUnmount(() => {
   DBR.stopScan();
   console.log("QRCodeScanner unmount");
 });
+
 
 
 watch(() => props.torchOn, (newVal, oldVal) => {

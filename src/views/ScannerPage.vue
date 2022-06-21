@@ -73,7 +73,9 @@ export default defineComponent({
     const barcodeResults = ref([] as TextResult[]);
     const sharedStates = states;
     const runtimeSettings = ref('');
-    
+    let frameWidth = 1280;
+    let frameHeight = 720;
+
     if (sharedStates.QRCodeOnly) {
       runtimeSettings.value = "{\"ImageParameter\":{\"BarcodeFormatIds\":[\"BF_QR_CODE\"],\"Description\":\"\",\"Name\":\"Settings\"},\"Version\":\"3.0\"}";
     }else{
@@ -91,6 +93,11 @@ export default defineComponent({
         sharedStates.barcodeResults = result.results;
         router.back();
       }else{
+        if (result.deviceOrientation === "portrait") {
+          viewBox.value = "0 0 " + frameWidth + " " + frameHeight;
+        }else{
+          viewBox.value = "0 0 " + frameHeight + " " + frameWidth;
+        }
         barcodeResults.value = result.results;
       }
     }
@@ -98,7 +105,8 @@ export default defineComponent({
     const onPlayed = (resolution:string) => {
       const width = resolution.split("x")[0];
       const height = resolution.split("x")[1];
-      viewBox.value = "0 0 " + width + " " + height;
+      frameWidth = parseInt(width);
+      frameHeight = parseInt(height);
     }
  
     const getPointsData = (tr:TextResult) => {
