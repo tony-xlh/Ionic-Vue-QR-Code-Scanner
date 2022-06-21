@@ -5,13 +5,15 @@
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { DBR, Options, ScanResult } from "capacitor-plugin-dynamsoft-barcode-reader";
-import { scan } from 'ionicons/icons';
+import { PluginListenerHandle } from "@capacitor/core";
 
 const props = defineProps(['license','dceLicense','torchOn','runtimeSettings']);
 const emit = defineEmits(['onScanned','onPlayed']);
 const initialized = ref(false);
 let currentHeight = 0;
 let currentWidth = 0;
+let frameReadListener:PluginListenerHandle|undefined;
+let onPlayedListener:PluginListenerHandle|undefined;
 
 const handleRotation = (result:any, orientation: string, rotation:number) => {
    let width,height;
@@ -68,7 +70,13 @@ onMounted(async () => {
   console.log("QRCodeScanner mounted");
   if (result.success === true) {
     initialized.value = true;
-    let frameReadListener = await DBR.addListener('onFrameRead', (scanResult:ScanResult) => {
+    if (frameReadListener) {
+      frameReadListener.remove();
+    }
+    if (onPlayedListener) {
+      onPlayedListener.remove();
+    }
+    frameReadListener = await DBR.addListener('onFrameRead', (scanResult:ScanResult) => {
       for (let index = 0; index < scanResult.results.length; index++) {
         const result = scanResult.results[index];
         if (scanResult.deviceOrientation && scanResult.frameOrientation) {
@@ -77,7 +85,8 @@ onMounted(async () => {
       }
       emit("onScanned",scanResult);
     });
-    let onPlayedListener = await DBR.addListener("onPlayed", (result:{resolution:string}) => {
+
+    onPlayedListener = await DBR.addListener("onPlayed", (result:{resolution:string}) => {
       currentWidth = parseInt(result.resolution.split("x")[0]);
       currentHeight = parseInt(result.resolution.split("x")[1]);
       emit("onPlayed",result.resolution);

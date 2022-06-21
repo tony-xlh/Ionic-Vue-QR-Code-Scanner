@@ -94,9 +94,9 @@ export default defineComponent({
         router.back();
       }else{
         if (result.deviceOrientation === "portrait") {
-          viewBox.value = "0 0 " + frameWidth + " " + frameHeight;
-        }else{
           viewBox.value = "0 0 " + frameHeight + " " + frameWidth;
+        }else{
+          viewBox.value = "0 0 " + frameWidth  + " " + frameHeight;
         }
         barcodeResults.value = result.results;
       }
