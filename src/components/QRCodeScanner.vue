@@ -118,6 +118,12 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
+  if (frameReadListener) {
+    frameReadListener.remove();
+  }
+  if (onPlayedListener) {
+    onPlayedListener.remove();
+  }
   DBR.stopScan();
   console.log("QRCodeScanner unmount");
 });
