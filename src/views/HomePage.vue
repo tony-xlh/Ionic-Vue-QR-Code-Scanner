@@ -17,6 +17,9 @@
           <ion-label>Scan QR Codes Only</ion-label>
           <ion-checkbox slot="end" v-model="sharedStates.QRCodeOnly"></ion-checkbox>
         </ion-item>
+        <ion-list-header v-if="sharedStates.barcodeResults.length>0">
+          <ion-label>Results:</ion-label>
+        </ion-list-header>
         <ion-item v-bind:key="'result'+index" v-for="(result,index) in sharedStates.barcodeResults">
           <ion-label>{{result.barcodeFormat+": "+result.barcodeText}}</ion-label>
         </ion-item>
@@ -26,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, IonList, IonLabel, IonCheckbox, IonItem, useIonRouter } from '@ionic/vue';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, IonList, IonLabel, IonListHeader, IonCheckbox, IonItem, useIonRouter } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { states } from '../states'
 
@@ -40,6 +43,7 @@ export default defineComponent({
     IonToolbar,
     IonButton,
     IonList,
+    IonListHeader,
     IonCheckbox,
     IonLabel,
     IonItem
