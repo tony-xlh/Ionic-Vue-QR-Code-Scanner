@@ -9,7 +9,7 @@ Supported platforms:
 3. Web
 
 
-[Online demo](https://zippy-queijadas-f321ba.netlify.app/home)
+[Online demo](https://zippy-queijadas-f321ba.netlify.app/)
 
 How to run:
 
