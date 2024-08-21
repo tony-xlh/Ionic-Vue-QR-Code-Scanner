@@ -1,5 +1,5 @@
 <template>
-  <ion-page id="scannerPage">
+  <ion-page>
     <QRCodeScanner 
       :torchOn="torchOn"
       @onScanned="onScanned"
@@ -131,11 +131,6 @@
   </script>
   
   <style scoped>
-  #scannerPage {
-    background: transparent;
-    --ion-background-color: transparent;
-  }
-  
   .barcode-polygon {
     fill:rgba(85,240,40,0.5);
     stroke:green;
