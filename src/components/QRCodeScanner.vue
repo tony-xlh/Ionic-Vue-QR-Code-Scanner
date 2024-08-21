@@ -1,5 +1,8 @@
 <template>
   <div v-if="!initialized">Initializing...</div>
+  <div ref="container">
+    <div class="dce-video-container"></div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -11,10 +14,10 @@ import { Capacitor,PluginListenerHandle } from "@capacitor/core";
 const props = defineProps(['license','torchOn']);
 const emit = defineEmits(['onScanned','onPlayed']);
 const initialized = ref(false);
+const container = ref<HTMLDivElement|undefined>();
 let onPlayedListener:PluginListenerHandle|undefined;
 let interval:any;
 let decoding = false;
-
 const startDecoding = () => {
   stopDecoding();
   interval = setInterval(captureAndDecode,100);
@@ -55,6 +58,9 @@ const readDataURL = async (dataURL:string) => {
 }
 
 onMounted(async () => {
+  if (container.value && Capacitor.isNativePlatform() === false) {
+    await CameraPreview.setElement(container.value);
+  }
   await CameraPreview.initialize();
   await CameraPreview.requestCameraPermission();
   try {
@@ -62,9 +68,7 @@ onMounted(async () => {
     if (licenseResult.success === false) {
       alert("License invalid");
     }
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
   let result = await DBR.initialize();
   
   console.log("QRCodeScanner mounted");
