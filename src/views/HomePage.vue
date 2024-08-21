@@ -1,71 +1,28 @@
 <template>
   <ion-page>
-    <ion-header>
+    <ion-header :translucent="true">
       <ion-toolbar>
-        <ion-title>QR Code Scanner</ion-title>
+        <ion-title>Blank</ion-title>
       </ion-toolbar>
     </ion-header>
-    
-    <ion-content>
-      <ion-button expand="full" v-on:click="gotoScannerPage">Scan Barcodes</ion-button>
-      <ion-list>
-        <ion-item>
-          <ion-label>Continuous Scan</ion-label>
-          <ion-checkbox slot="end" v-model="sharedStates.continuousScan"></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-label>Scan QR Codes Only</ion-label>
-          <ion-checkbox slot="end" v-model="sharedStates.QRCodeOnly"></ion-checkbox>
-        </ion-item>
-        <ion-list-header v-if="sharedStates.barcodeResults.length>0">
-          <ion-label>Results:</ion-label>
-        </ion-list-header>
-        <ion-item v-bind:key="'result'+index" v-for="(result,index) in sharedStates.barcodeResults">
-          <ion-label>{{result.barcodeFormat+": "+result.barcodeText}}</ion-label>
-        </ion-item>
-      </ion-list>
+
+    <ion-content :fullscreen="true">
+      <ion-header collapse="condense">
+        <ion-toolbar>
+          <ion-title size="large">Blank</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
+      <div id="container">
+        <strong>Ready to create an app?</strong>
+        <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+      </div>
     </ion-content>
   </ion-page>
 </template>
 
-<script lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, IonList, IonLabel, IonListHeader, IonCheckbox, IonItem, useIonRouter } from '@ionic/vue';
-import { defineComponent } from 'vue';
-import { states } from '../states'
-
-export default defineComponent({
-  name: 'HomePage',
-  components: {
-    IonContent,
-    IonHeader,
-    IonPage,
-    IonTitle,
-    IonToolbar,
-    IonButton,
-    IonList,
-    IonListHeader,
-    IonCheckbox,
-    IonLabel,
-    IonItem
-  },
-
-  setup() {
-    const router = useIonRouter();
-    const sharedStates = states;
-
-    const gotoScannerPage = () => {
-      router.push('/scanner');
-    }
-
-    return { 
-      sharedStates,
-      gotoScannerPage
-    };
-  },
-
-
-});
-
+<script setup lang="ts">
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
 </script>
 
 <style scoped>

@@ -1,7 +1,5 @@
 {
   "name": "QRCodeScanner",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "vue"
+  "integrations": {},
+  "type": "vue-vite"
 }
