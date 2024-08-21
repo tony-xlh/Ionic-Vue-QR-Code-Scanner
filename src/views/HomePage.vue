@@ -7,7 +7,7 @@
     </ion-header>
     
     <ion-content>
-      <ion-button expand="full" v-on:click="gotoScannerPage">{{licenseInitialized ? "Scan Barcodes" : "Initializing"}}</ion-button>
+      <ion-button expand="full" v-on:click="gotoScannerPage">{{licenseInitialized ? "Scan Barcodes" : "Initializing..."}}</ion-button>
       <ion-list>
         <ion-item>
           <ion-label>Continuous Scan</ion-label>
