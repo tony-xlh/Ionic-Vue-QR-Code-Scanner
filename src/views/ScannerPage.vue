@@ -67,7 +67,8 @@
       const viewBox = ref("0 0 1280 720");
       const barcodeResults = ref([] as TextResult[]);
       const sharedStates = states;
-      
+      let ionBackground = "";
+
       const router = useIonRouter();
       let scanned = false;
   
@@ -75,6 +76,7 @@
         console.log("onScanned");
         if (results.length>0 && scanned === false && sharedStates.continuousScan === false) {
           scanned = true;
+          document.documentElement.style.setProperty('--ion-background-color', ionBackground);
           sharedStates.barcodeResults = results;
           router.back();
         }else{
@@ -108,13 +110,18 @@
       }
   
       const close = () => {
+        document.documentElement.style.setProperty('--ion-background-color', ionBackground);
         router.back();
       }
   
       onMounted(() => {
+        ionBackground = document.documentElement.style.getPropertyValue('--ion-background-color');
+        console.log("ionBackground: "+ionBackground)
+        document.documentElement.style.setProperty('--ion-background-color', 'transparent');
         console.log(sharedStates.continuousScan);
         console.log(sharedStates);
       });
+
       return {
         torchOn,
         toggleFlash,

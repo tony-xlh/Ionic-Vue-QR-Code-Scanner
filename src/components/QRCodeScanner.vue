@@ -18,6 +18,7 @@ const container = ref<HTMLDivElement|undefined>();
 let onPlayedListener:PluginListenerHandle|undefined;
 let interval:any;
 let decoding = false;
+
 const startDecoding = () => {
   stopDecoding();
   interval = setInterval(captureAndDecode,100);
