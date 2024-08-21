@@ -69,22 +69,19 @@ onMounted(async () => {
       alert("License invalid");
     }
   } catch (error) {}
-  let result = await DBR.initialize();
-  
+  await DBR.initialize();
   console.log("QRCodeScanner mounted");
-  if (result.success === true) {
-    initialized.value = true;
-    if (onPlayedListener) {
-      onPlayedListener.remove();
-    }
-    onPlayedListener = await CameraPreview.addListener("onPlayed", async () => {
-      startDecoding();
-      const orientation = (await CameraPreview.getOrientation()).orientation;
-      const resolution = (await CameraPreview.getResolution()).resolution;
-      emit("onPlayed",{orientation:orientation,resolution:resolution});
-    });
-    await CameraPreview.startCamera();
+  initialized.value = true;
+  if (onPlayedListener) {
+    onPlayedListener.remove();
   }
+  onPlayedListener = await CameraPreview.addListener("onPlayed", async () => {
+    startDecoding();
+    const orientation = (await CameraPreview.getOrientation()).orientation;
+    const resolution = (await CameraPreview.getResolution()).resolution;
+    emit("onPlayed",{orientation:orientation,resolution:resolution});
+  });
+  await CameraPreview.startCamera();
 });
 
 onBeforeUnmount(async () => {
