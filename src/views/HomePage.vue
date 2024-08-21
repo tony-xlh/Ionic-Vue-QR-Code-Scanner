@@ -7,7 +7,7 @@
     </ion-header>
     
     <ion-content>
-      <ion-button expand="full" v-on:click="gotoScannerPage">Scan Barcodes</ion-button>
+      <ion-button expand="full" v-on:click="gotoScannerPage">{{licenseInitialized ? "Scan Barcodes" : "Initializing"}}</ion-button>
       <ion-list>
         <ion-item>
           <ion-label>Continuous Scan</ion-label>
@@ -26,8 +26,9 @@
 
 <script lang="ts">
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, IonList, IonLabel, IonListHeader, IonCheckbox, IonItem, useIonRouter } from '@ionic/vue';
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import { states } from '../states'
+import { DBR } from 'capacitor-plugin-dynamsoft-barcode-reader';
 
 export default defineComponent({
   name: 'HomePage',
@@ -46,16 +47,32 @@ export default defineComponent({
   },
 
   setup() {
+    const licenseInitialized = ref(false);
     const router = useIonRouter();
     const sharedStates = states;
 
     const gotoScannerPage = () => {
-      router.push('/scanner');
+      if (licenseInitialized.value === true) {
+        router.push('/scanner');
+      }
     }
+
+    onMounted(async ()=>{
+      if (states.licenseInitialized === false) {
+        try {
+          await DBR.initLicense({license:"DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ=="});
+        } catch (error) {
+          alert("License invalid");
+          return;
+        }
+      }
+      licenseInitialized.value = true;
+    })
 
     return { 
       sharedStates,
-      gotoScannerPage
+      gotoScannerPage,
+      licenseInitialized
     };
   },
 

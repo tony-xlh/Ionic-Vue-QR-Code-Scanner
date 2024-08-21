@@ -4,4 +4,5 @@ import { reactive } from "vue";
 export const states = reactive({
   continuousScan: false,
   barcodeResults: [] as TextResult[],
+  licenseInitialized: false,
 });

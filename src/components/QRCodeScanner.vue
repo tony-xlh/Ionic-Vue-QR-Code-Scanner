@@ -11,7 +11,7 @@ import { DBR } from "capacitor-plugin-dynamsoft-barcode-reader";
 import { CameraPreview } from "capacitor-plugin-camera";
 import { Capacitor,PluginListenerHandle } from "@capacitor/core";
 
-const props = defineProps(['license','torchOn']);
+const props = defineProps(['torchOn']);
 const emit = defineEmits(['onScanned','onPlayed']);
 const initialized = ref(false);
 const container = ref<HTMLDivElement|undefined>();
@@ -63,12 +63,6 @@ onMounted(async () => {
   }
   await CameraPreview.initialize();
   await CameraPreview.requestCameraPermission();
-  try {
-    let licenseResult = await DBR.initLicense({license:props.license})
-    if (licenseResult.success === false) {
-      alert("License invalid");
-    }
-  } catch (error) {}
   await DBR.initialize();
   console.log("QRCodeScanner mounted");
   initialized.value = true;
